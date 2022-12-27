@@ -17,10 +17,128 @@ namespace RecibosApi.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("ProductVersion", "7.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("RecibosApi.Entidades.CodigoDePago", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Codigo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Periodo")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tipo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CodigoDePagos");
+                });
+
+            modelBuilder.Entity("RecibosApi.Entidades.DetalleCodigoDePago", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("Codigo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CodigoDePagoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreadoPor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("DescuentoAFP")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("DescuentoISR")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("DescuentoSFS")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("DescuentoTSS")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("EmpleadoId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaCrecion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaModificacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModificadoPor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Primario")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("activo")
+                        .HasColumnType("bit");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("CodigoDePagoId");
+
+                    b.HasIndex("EmpleadoId");
+
+                    b.ToTable("detalleCodigoDePagos");
+                });
+
+            modelBuilder.Entity("RecibosApi.Entidades.Empleado", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Apellido")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Celular")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Direccion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FechaNacimiento")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefono")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("empleados");
+                });
 
             modelBuilder.Entity("RecibosApi.Entidades.Miembros", b =>
                 {
@@ -28,7 +146,7 @@ namespace RecibosApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("iD"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("iD"));
 
                     b.Property<string>("Cedula")
                         .HasColumnType("nvarchar(max)");
@@ -71,7 +189,7 @@ namespace RecibosApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Año")
                         .HasColumnType("nvarchar(max)");
@@ -99,6 +217,21 @@ namespace RecibosApi.Migrations
                     b.HasIndex("miembrosId");
 
                     b.ToTable("vehiculos");
+                });
+
+            modelBuilder.Entity("RecibosApi.Entidades.DetalleCodigoDePago", b =>
+                {
+                    b.HasOne("RecibosApi.Entidades.CodigoDePago", "CodigoDePago")
+                        .WithMany()
+                        .HasForeignKey("CodigoDePagoId");
+
+                    b.HasOne("RecibosApi.Entidades.Empleado", "Empleado")
+                        .WithMany()
+                        .HasForeignKey("EmpleadoId");
+
+                    b.Navigation("CodigoDePago");
+
+                    b.Navigation("Empleado");
                 });
 
             modelBuilder.Entity("RecibosApi.Entidades.Vehiculo", b =>
